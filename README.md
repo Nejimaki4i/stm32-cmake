@@ -1,24 +1,22 @@
 # About
 
-This project is used to develop applications for the STM32 - ST's ARM Cortex-Mx MCUs. It uses cmake and GCC, along with newlib (libc), STM32CubeMX or ChibiOS.
+This project is used to develop applications for the STM32 - ST's ARM Cortex-Mx MCUs. It uses cmake and GCC, along with ChibiOS 18.2.1.
 
 ## Requirements
 
 * cmake >= 3.0
 * GCC toolchain with newlib (optional).
-* STM32CubeMX package for STM32F0, STM32F1, STM32F2, STM32F3, STM32F4, STM32F7, STM32L0, STM32L1, STM32L4 families.
 
 ## Project contains
 
 * CMake common toolchain file, that configures cmake to use the arm toolchain.
 * CMake toolchain file that can generate a tunable linker script
 * CMake STM32 family-specific toolchain file, that configures family-specific parameters.
-* CMake modules to find and configure CMSIS and STM32HAL components.
 * CMake modules to find and configure ChibiOS components.
 * CMake project template.
 
 ## Examples
-* `stm32-chibios-f0` - blink led using ChibiOS/RT.
+* `stm32-chibios-rt-f0` - blink led using ChibiOS/RT from STM32F0 Discovery. 
 
 # Usage
 
@@ -30,7 +28,6 @@ First of all you need to configure toolchain and libraries, you can do this by e
 * `TARGET_TRIPLET` - toolchain target triplet, **default**: `arm-none-eabi`
 * `STM32_CHIP` - STM32 device code, e.g. `STM32F407VG` or `STM32F103VG`
 * `STM32_FAMILY` - STM32 family (F0, F1, F4, etc.) currently, F0, F1, F2, F4, F7, L0, L1 and L4 families are supported. **Note:** If `STM32_CHIP` variable is set, `STM32_FAMILY` is optional.
-* `STM32Cube_DIR` - path to STM32CubeMX directory **default**: `/opt/STM32Cube_FW_F0_V1.4.0 /opt/STM32Cube_FW_F1_V1.1.0 /opt/STM32Cube_FW_F2_V1.1.0 /opt/STM32Cube_FW_F4_V1.6.0`
 
 To use the toolchain, you'll need to copy contents of the `cmake` folder into cmake's modules path, or use the `CMAKE_MODULE_PATH` variable.
 
@@ -47,10 +44,6 @@ The script will try to detect chip parameters automatically from the chip name (
 * `STM32_CHIP_TYPE` - family-dependent chip type. Global variable `STM32_CHIP_TYPES` contains list of valid types for current family (e.g `207xG`)
 * `STM32_FLASH_SIZE` - chip flash size (e.g. 64K)
 * `STM32_RAM_SIZE` - chip RAM size (e.g. 4K)
-
-### Usage with Eclipse CDT:
-
-    cmake -DSTM32_CHIP=<chip> -DCMAKE_TOOLCHAIN_FILE=<path_to_gcc_stm32.cmake> -DCMAKE_BUILD_TYPE=Debug -G "Eclipse CDT4 - Unix Makefiles" <path_to_source_dir>
 
 ## Building
 
@@ -82,19 +75,10 @@ You can use cmake variables below to tune the generated linker. To specify a cus
 
 # ChibiOS Support
 
-This project also supports ChibiOS v3.x.x and ChibiOS v16.x.x (both nil and rt kernels).
+This project also supports ChibiOS v18.2.1.
 
-CMake modules for ChibiOS can find specified ChibiOS components using the COMPONENTS directive.
+CMake modules for ChibiOS can find specified ChibiOS components parse halconf.h file.
 
-See project `stm32-chibios` for example usage.
+See project `stm32-chibios-rt-f0` for example usage.
 
-# FreeRTOS Support
 
-FreeRTOS is also supported. To include it in your project you should set a variable named `FREERTOS_HEAP_IMPL` with 
-a proper number of FreeRTOS heap implementation. You can do this by invoking:
-
-```
-SET(FREERTOS_HEAP_IMPL 4)
-```
-
-before `FIND_PACKAGE` command.
