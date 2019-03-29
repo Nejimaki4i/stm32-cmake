@@ -18,10 +18,7 @@ This project is used to develop applications for the STM32 - ST's ARM Cortex-Mx 
 * CMake project template.
 
 ## Examples
-
-* `stm32-blinky` - blink LED using timers and PWM.
-* `stm32-newlib` - show date using uart and libc functions from newlib.
-* `stm32-chibios` - blink led using ChibiOS/NIL.
+* `stm32-chibios-f0` - blink led using ChibiOS/RT.
 
 # Usage
 
