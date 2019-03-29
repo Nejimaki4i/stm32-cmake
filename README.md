@@ -5,7 +5,7 @@ This project is used to develop applications for the STM32 - ST's ARM Cortex-Mx 
 ## Requirements
 
 * cmake >= 3.0
-* GCC toolchain with newlib (optional).
+* GCC toolchain.
 
 ## Project contains
 
