@@ -1,3 +1,5 @@
+SET(CHIBIOS_IS_USE "TRUE")
+
 IF(NOT ChibiOS_FIND_COMPONENTS)
     SET(ChibiOS_FIND_COMPONENTS nil hal)
     MESSAGE(STATUS "No ChibiOS components specified, using default: ${ChibiOS_FIND_COMPONENTS}")

@@ -1,10 +1,10 @@
 
-set(CMAKE_TOOLCHAIN_FILE /home/neji/stm32-cmake/cmake/gcc_stm32.cmake)
+set(CMAKE_TOOLCHAIN_FILE /path_to/stm32-cmake/cmake/gcc_stm32.cmake)
 set(TOOLCHAIN_PREFIX /usr)
-set(CMAKE_MODULE_PATH /home/neji/stm32-cmake/cmake/)
+set(CMAKE_MODULE_PATH /path_to/stm32-cmake/cmake/)
 set(TARGET_TRIPLET "arm-none-eabi")
 
-set(CHIBIOS_ROOT /home/neji/rtos/chibios1821)
+set(CHIBIOS_ROOT /path_to_chibios)
 
 set(STM32_CHIP STM32F051x8)
 set(STM32_FAMILY F0)
@@ -43,11 +43,7 @@ set(PROJECT_SOURCES
 
 ADD_DEFINITIONS(-DCORTEX_USE_FPU=no)
 
-SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -L\"${CHIBIOS_ROOT}/os/common/startup/ARMCMx/compilers/GCC/ld\"")
-SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--defsym=__process_stack_size__=${CHIBIOS_PROCESS_STACK_SIZE}")
-SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--defsym=__main_stack_size__=${CHIBIOS_MAIN_STACK_SIZE}")
 
-message("Linker flags": ${CMAKE_EXE_LINKER_FLAGS})
 ADD_EXECUTABLE(${CMAKE_PROJECT_NAME} ${PROJECT_SOURCES} ${ChibiOS_SOURCES})
 TARGET_LINK_LIBRARIES(${CMAKE_PROJECT_NAME})
 
