@@ -1,4 +1,4 @@
-FOREACH (FAMILY F0 L0 L4)
+FOREACH (FAMILY F0 L0)
     SET (CHIBIOS_SOURCES_${CHIBIOS_KERNEL}_${FAMILY}
         os/common/startup/ARMCMx/compilers/GCC/crt0_v6m.S
         os/common/ports/ARMCMx/chcore.c
@@ -7,7 +7,7 @@ FOREACH (FAMILY F0 L0 L4)
     )
 ENDFOREACH()
 
-FOREACH (FAMILY F1 F2 F3 F4 F7)
+FOREACH (FAMILY F1 F2 F3 F4 F7 L4)
     SET (CHIBIOS_SOURCES_${CHIBIOS_KERNEL}_${FAMILY}
         os/common/startup/ARMCMx/compilers/GCC/crt0_v7m.S
         os/common/ports/ARMCMx/chcore.c
@@ -16,7 +16,7 @@ FOREACH (FAMILY F1 F2 F3 F4 F7)
     )
 ENDFOREACH()
 
-FOREACH (FAMILY F0 F1 F2 F3 F4 F7 L0 L1)
+FOREACH (FAMILY F0 F1 F2 F3 F4 F7 L0 L1 L4)
     SET (CHIBIOS_INCLUDES_${CHIBIOS_KERNEL}_${FAMILY}
         os/common/startup/ARMCMx/devices/STM32${FAMILY}xx
         os/common/ext/ST/STM32${FAMILY}xx

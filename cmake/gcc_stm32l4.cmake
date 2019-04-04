@@ -1,14 +1,58 @@
-SET(CMAKE_C_FLAGS "-mthumb -fno-builtin -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -Wall -std=gnu99 -ffunction-sections -fdata-sections -fomit-frame-pointer -mabi=aapcs -fno-unroll-loops -ffast-math -ftree-vectorize" CACHE INTERNAL "c compiler flags")
-SET(CMAKE_CXX_FLAGS "-mthumb -fno-builtin -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -Wall -std=c++11 -ffunction-sections -fdata-sections -fomit-frame-pointer -mabi=aapcs -fno-unroll-loops -ffast-math -ftree-vectorize" CACHE INTERNAL "cxx compiler flags")
-SET(CMAKE_ASM_FLAGS "-mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -x assembler-with-cpp" CACHE INTERNAL "asm compiler flags")
+add_definitions("-DTHUMB_PRESENT")
+add_definitions("-DTHUMB_NO_INTERWORKING")
 
-IF(NOT CHIBIOS_IS_USE)
-  SET(CMAKE_EXE_LINKER_FLAGS "-Wl,--gc-sections -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mabi=aapcs" CACHE INTERNAL "executable linker flags")
-ENDIF()
-  
-SET(CMAKE_MODULE_LINKER_FLAGS "-mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mabi=aapcs" CACHE INTERNAL "module linker flags")
-SET(CMAKE_SHARED_LINKER_FLAGS "-mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -mabi=aapcs" CACHE INTERNAL "shared linker flags")
-SET(STM32_CHIP_TYPES 431xx 432xx 433xx 442xx 443xx 451xx 452xx 462xx 471xx 475xx 476xx 485xx 486xx 496xx 4a6xx 4r5xx 4r7xx 4r9xx 4s5xx 4s7xx 4s9xx CACHE INTERNAL "stm32l4 chip types")
+if(USE_FPU STREQUAL "no")
+    SET(CMAKE_C_FLAGS "-mthumb -fno-builtin -mcpu=cortex-m4 -Wall -std=gnu99 -ffunction-sections -fdata-sections -fomit-frame-pointer -mabi=aapcs -fno-unroll-loops -ffast-math -ftree-vectorize" CACHE INTERNAL)
+    SET(CMAKE_CXX_FLAGS "-mthumb -fno-builtin -mcpu=cortex-m4 -Wall -std=c++11 -ffunction-sections -fdata-sections -fomit-frame-pointer -mabi=aapcs -fno-unroll-loops -ffast-math -ftree-vectorize" CACHE INTERNAL)
+    SET(CMAKE_ASM_FLAGS "-mthumb -mcpu=cortex-m4 -x assembler-with-cpp" CACHE INTERNAL)
+
+    IF(CMAKE_EXE_LINKER_FLAGS)
+      SET(CMAKE_EXE_LINKER_FLAGS "-Wl,--gc-sections -mthumb -mcpu=cortex-m4 -mabi=aapcs ${CMAKE_EXE_LINKER_FLAGS}")
+    else()
+      SET(CMAKE_EXE_LINKER_FLAGS "-Wl,--gc-sections -mthumb -mcpu=cortex-m4 -mabi=aapcs")
+    endif()
+
+    SET(CMAKE_MODULE_LINKER_FLAGS "-mthumb -mcpu=cortex-m4 -mabi=aapcs")
+    SET(CMAKE_SHARED_LINKER_FLAGS "-mthumb -mcpu=cortex-m4 -mabi=aapcs")
+
+    add_definitions("-DCORTEX_USE_FPU=FALSE")
+
+elseif(USE_FPU STREQUAL "soft")
+    SET(CMAKE_C_FLAGS "-mthumb -fno-builtin -mcpu=cortex-m4 -mfpu=fpv5-sp-d16 -mfloat-abi=softfp -Wall -std=gnu99 -ffunction-sections -fdata-sections -fomit-frame-pointer -mabi=aapcs -fno-unroll-loops -ffast-math -ftree-vectorize" CACHE INTERNAL "")
+    SET(CMAKE_CXX_FLAGS "-mthumb -fno-builtin -mcpu=cortex-m4 -mfpu=fpv5-sp-d16 -mfloat-abi=softfp -Wall -std=c++11 -ffunction-sections -fdata-sections -fomit-frame-pointer -mabi=aapcs -fno-unroll-loops -ffast-math -ftree-vectorize" CACHE INTERNAL "")
+    SET(CMAKE_ASM_FLAGS "-mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=softfp -x assembler-with-cpp" CACHE INTERNAL "")
+
+    IF(CMAKE_EXE_LINKER_FLAGS)
+      SET(CMAKE_EXE_LINKER_FLAGS "-Wl,--gc-sections -mthumb -mcpu=cortex-m4 -mfpu=fpv5-sp-d16 -mfloat-abi=softfp -mabi=aapcs ${CMAKE_EXE_LINKER_FLAGS}")
+    else()
+      SET(CMAKE_EXE_LINKER_FLAGS "-Wl,--gc-sections -mthumb -mcpu=cortex-m4 -mfpu=fpv5-sp-d16 -mfloat-abi=softfp -mabi=aapcs")
+    endif()
+
+    SET(CMAKE_MODULE_LINKER_FLAGS "-mthumb -mcpu=cortex-m4 -mfpu=fpv5-sp-d16 -mfloat-abi=softfp -mabi=aapcs")
+    SET(CMAKE_SHARED_LINKER_FLAGS "-mthumb -mcpu=cortex-m4 -mfpu=fpv5-sp-d16 -mfloat-abi=softfp -mabi=aapcs")
+
+    add_definitions("-DCORTEX_USE_FPU=TRUE")
+
+elseif(USE_FPU STREQUAL "hard")
+    SET(CMAKE_C_FLAGS "-mthumb -fno-builtin -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -Wall -std=gnu99 -ffunction-sections -fdata-sections -fomit-frame-pointer -mabi=aapcs -fno-unroll-loops -ffast-math -ftree-vectorize")
+    SET(CMAKE_CXX_FLAGS "-mthumb -fno-builtin -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -Wall -std=c++11 -ffunction-sections -fdata-sections -fomit-frame-pointer -mabi=aapcs -fno-unroll-loops -ffast-math -ftree-vectorize")
+    SET(CMAKE_ASM_FLAGS "-mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -x assembler-with-cpp")
+
+    IF(CMAKE_EXE_LINKER_FLAGS)
+      SET(CMAKE_EXE_LINKER_FLAGS "-Wl,--gc-sections -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mabi=aapcs ${CMAKE_EXE_LINKER_FLAGS}")
+    else()
+      SET(CMAKE_EXE_LINKER_FLAGS "-Wl,--gc-sections -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mabi=aapcs")
+    endif()
+
+    SET(CMAKE_MODULE_LINKER_FLAGS "-mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mabi=aapcs")
+    SET(CMAKE_SHARED_LINKER_FLAGS "-mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mabi=aapcs")
+    add_definitions("-DCORTEX_USE_FPU=TRUE")
+else()
+    message("-- USE_FPU not defined, define this value: no, softfp, hard")
+endif()
+
+
+SET(STM32_CHIP_TYPES 431xx 432xx 433xx 442xx 443xx 451xx 452xx 462xx 471xx 475xx 476xx 485xx 486xx 496xx 4a6xx 4r5xx 4r7xx 4r9xx 4s5xx 4s7xx 4s9xx)
 SET(STM32_CODES "431.." "432.." "433.." "442.." "443.." "451.." "452.." "462.." "471.." "475.." "476.." "485.." "486.." "496.." "4a6.." "4r5.." "4r7.." "4r9.." "4s5.." "4s7.." "4s9..")
 
 MACRO(STM32_GET_CHIP_TYPE CHIP CHIP_TYPE)
